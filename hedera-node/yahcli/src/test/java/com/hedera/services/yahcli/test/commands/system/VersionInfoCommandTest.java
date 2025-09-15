@@ -12,14 +12,15 @@ import picocli.CommandLine;
 
 class VersionInfoCommandTest extends YahcliTestBase {
     private static final String VERSION_COMMAND = "version";
-    private static final String TEST_IP_ADDRESS = "10.0.0.1";
+    private static final String TEST_IP_ADDRESS = "192.0.2.1"; // RFC 5737 test IP
+    private static final String YAHCLI_COMMAND = "yahcli";
 
     @Nested
     class HelpCommandParams {
         @Test
         void helpCommandParses() {
             final var result = parseArgs(typicalGlobalOptions() + " " + VERSION_COMMAND + " help");
-            assertCommandHierarchyOf(result, "yahcli", VERSION_COMMAND, "help");
+            assertCommandHierarchyOf(result, YAHCLI_COMMAND, VERSION_COMMAND, "help");
         }
 
         @Test
@@ -35,7 +36,7 @@ class VersionInfoCommandTest extends YahcliTestBase {
         @Test
         void parsesCommandHierarchy() {
             final var result = parseArgs(typicalGlobalOptions() + " " + VERSION_COMMAND);
-            assertCommandHierarchyOf(result, "yahcli", VERSION_COMMAND);
+            assertCommandHierarchyOf(result, YAHCLI_COMMAND, VERSION_COMMAND);
         }
 
         @Test
@@ -51,7 +52,7 @@ class VersionInfoCommandTest extends YahcliTestBase {
             final var result = parseArgs(typicalGlobalOptions() + " " + VERSION_COMMAND);
             final var cmdSpec = findSubcommand(result, VERSION_COMMAND);
             assertThat(cmdSpec).isPresent();
-            assertThat(cmdSpec.get().parent().name()).isEqualTo("yahcli");
+            assertThat(cmdSpec.get().parent().name()).isEqualTo(YAHCLI_COMMAND);
         }
 
         @Test
@@ -90,7 +91,7 @@ class VersionInfoCommandTest extends YahcliTestBase {
             final var result = parseArgs("-c config.yml -n mainnet -a 3 -p 2 -f 100 " + VERSION_COMMAND);
             final var cmdSpec = findSubcommand(result, VERSION_COMMAND);
             assertThat(cmdSpec).isPresent();
-            assertThat(cmdSpec.get().parent().name()).isEqualTo("yahcli");
+            assertThat(cmdSpec.get().parent().name()).isEqualTo(YAHCLI_COMMAND);
 
             // Verify global options are parsed correctly
             assertThat(testSubjectCli().getNet()).isEqualTo("mainnet");
@@ -106,7 +107,7 @@ class VersionInfoCommandTest extends YahcliTestBase {
             final var result = parseArgs("-n testnet -p 2 " + VERSION_COMMAND);
             final var cmdSpec = findSubcommand(result, VERSION_COMMAND);
             assertThat(cmdSpec).isPresent();
-            assertThat(cmdSpec.get().parent().name()).isEqualTo("yahcli");
+            assertThat(cmdSpec.get().parent().name()).isEqualTo(YAHCLI_COMMAND);
         }
 
         @Test
@@ -162,7 +163,7 @@ class VersionInfoCommandTest extends YahcliTestBase {
                     TEST_IP_ADDRESS, VERSION_COMMAND));
             final var cmdSpec = findSubcommand(result, VERSION_COMMAND);
             assertThat(cmdSpec).isPresent();
-            assertThat(cmdSpec.get().parent().name()).isEqualTo("yahcli");
+            assertThat(cmdSpec.get().parent().name()).isEqualTo(YAHCLI_COMMAND);
 
             // Verify all global options are parsed correctly
             assertThat(testSubjectCli().getConfigLoc()).isEqualTo("custom.yml");
